@@ -103,7 +103,7 @@ def main():
     'Discounted Cash Flow'
   ])
 
-  results.to_csv("simulations/{}.csv".format(ticker))
+  results.to_csv("simulations/{}/{}.csv".format(ticker, ticker))
 
 if __name__ == "__main__":
   main()

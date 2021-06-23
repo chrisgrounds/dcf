@@ -9,7 +9,7 @@ parser.add_argument('--ticker')
 
 args = parser.parse_args()
 
-results_df = pd.read_csv("simulations/{}.csv".format(args.ticker))
+results_df = pd.read_csv("simulations/{}/{}.csv".format(args.ticker, args.ticker))
 
 print(results_df)
 
