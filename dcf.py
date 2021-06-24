@@ -27,7 +27,7 @@ class Financials():
     return v / 1000000000
 
   @staticmethod
-  def generate_revenue(rev, growth_rate):
+  def generate_future_revenue(rev, growth_rate):
     revenue = [rev]
 
     i = 0
@@ -47,7 +47,7 @@ discount_rate = 0.07
 pe_ratio = 30
 num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
 num_years = 10
-revenue = Financials.generate_revenue(current_revenue, growth_rate)
+revenue = Financials.generate_future_revenue(current_revenue, growth_rate)
 
 class NormalDistribution:
   @staticmethod
