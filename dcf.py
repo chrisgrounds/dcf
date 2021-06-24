@@ -13,6 +13,13 @@ parser.add_argument('--growth', type=float)
 args = parser.parse_args()
 ticker = args.ticker
 growth_rate = args.growth
+gross_margin_avg = 0.2
+operating_margin_avg = 0.1
+std_dev = 0.1
+tax_rate = 0.2
+discount_rate = 0.07
+pe_ratio = 30
+num_years = 10
 
 class Financials():
   @staticmethod
@@ -37,29 +44,18 @@ class Financials():
 
     return np.array(revenue)
 
-current_revenue = Financials.from_billions(stock_info.get_income_statement(ticker).loc["totalRevenue"][0])
-
-gross_margin_avg = 0.2
-operating_margin_avg = 0.1
-std_dev = 0.1
-tax_rate = 0.2
-discount_rate = 0.07
-pe_ratio = 30
-num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
-num_years = 10
-revenue = Financials.generate_future_revenue(current_revenue, growth_rate)
-
 class NormalDistribution:
   @staticmethod
   def generate(center, scale, size):
     return np.random.normal(center, scale, size).round(2)
 
 class MonteCarlo:
-  def __init__(self, std_dev, revenue, gross_margin_avg, operating_margin_avg):
+  def __init__(self, std_dev, revenue, gross_margin_avg, operating_margin_avg, num_shares):
     self.std_dev = std_dev
     self.revenue = revenue
     self.gross_margin_avg = gross_margin_avg
     self.operating_margin_avg = operating_margin_avg
+    self.num_shares = num_shares
 
   def calculate(self):
     gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, num_years)
@@ -75,7 +71,7 @@ class MonteCarlo:
     df["gross_profit"] = df["revenue"] * df["gross_margin"]
     df["operating_profit"] = df["revenue"] * df["operating_margin"]
     df["net_income"] = df["operating_profit"].apply(Financials.calculate_tax)
-    df["eps"] = df["net_income"].apply(Financials.to_billions) / num_shares
+    df["eps"] = df["net_income"].apply(Financials.to_billions) / self.num_shares
 
     return df
 
@@ -104,7 +100,13 @@ class MonteCarlo:
     return financials
 
 def main():
-  monteCarlo = MonteCarlo(std_dev, revenue, gross_margin_avg, operating_margin_avg)
+  num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
+  current_revenue = Financials.from_billions(stock_info.get_income_statement(ticker).loc["totalRevenue"][0])
+  revenue = Financials.generate_future_revenue(current_revenue, growth_rate)
+
+  print("Generated revenue: ", revenue)
+
+  monteCarlo = MonteCarlo(std_dev, revenue, gross_margin_avg, operating_margin_avg, num_shares)
 
   financials = monteCarlo.simulate()
 
