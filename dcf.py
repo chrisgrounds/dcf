@@ -32,7 +32,7 @@ class Financials():
 
     i = 0
     while (i < num_years):
-      revenue.append(round(revenue[-1] * (1 + growth_rate), 2))
+      revenue.append(round(revenue[-1] * growth_rate, 2))
       i += 1
 
     return np.array(revenue)
