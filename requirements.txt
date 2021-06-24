@@ -1,3 +1,4 @@
 pandas
 numpy
 numpy_financial
+yahoo_fin

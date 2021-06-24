@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import numpy_financial as npf
 import argparse
+from yahoo_fin import stock_info
 
 parser = argparse.ArgumentParser(description='Command line args')
 
@@ -9,15 +10,17 @@ parser.add_argument('--simulations', type=int)
 parser.add_argument('--ticker')
 
 args = parser.parse_args()
-
 ticker = args.ticker
+
+current_revenue = stock_info.get_income_statement(ticker).iloc[15]["2020-12-31"].values[0]
+
 gross_margin_avg = 0.2
 operating_margin_avg = 0.1
 std_dev = 0.1
 tax_rate = 0.2
 discount_rate = 0.07
 pe_ratio = 30
-num_shares = 963330000
+num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
 revenue = np.array([45, 73, 109, 152, 216, 324, 458, 647, 820, 1019])
 num_years = revenue.size
 
