@@ -8,11 +8,36 @@ parser = argparse.ArgumentParser(description='Command line args')
 
 parser.add_argument('--simulations', type=int)
 parser.add_argument('--ticker')
+parser.add_argument('--growth', type=float)
 
 args = parser.parse_args()
 ticker = args.ticker
+growth_rate = args.growth
 
-current_revenue = stock_info.get_income_statement(ticker).loc["totalRevenue"][0]
+class Financials():
+  @staticmethod
+  def calculate_tax(v):
+    return v * tax_rate if v > 0 else 0
+
+  @staticmethod
+  def to_billions(v):
+    return v * 1000000000
+
+  def from_billions(v):
+    return v / 1000000000
+
+  @staticmethod
+  def generate_revenue(rev, growth_rate):
+    revenue = [rev]
+
+    i = 0
+    while (i < num_years):
+      revenue.append(round(revenue[-1] * (1 + growth_rate), 2))
+      i += 1
+
+    return np.array(revenue)
+
+current_revenue = Financials.from_billions(stock_info.get_income_statement(ticker).loc["totalRevenue"][0])
 
 gross_margin_avg = 0.2
 operating_margin_avg = 0.1
@@ -21,17 +46,8 @@ tax_rate = 0.2
 discount_rate = 0.07
 pe_ratio = 30
 num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
-revenue = np.array([45, 73, 109, 152, 216, 324, 458, 647, 820, 1019])
-num_years = revenue.size
-
-class Financials():
-  @staticmethod
-  def calculate_tax(v):
-    return v * tax_rate if v > 0 else 0
-
-  @staticmethod
-  def convert_to_billions(v):
-    return v * 1000000000
+num_years = 10
+revenue = Financials.generate_revenue(current_revenue, growth_rate)
 
 class NormalDistribution:
   @staticmethod
@@ -59,7 +75,7 @@ class MonteCarlo:
     df["gross_profit"] = df["revenue"] * df["gross_margin"]
     df["operating_profit"] = df["revenue"] * df["operating_margin"]
     df["net_income"] = df["operating_profit"].apply(Financials.calculate_tax)
-    df["eps"] = df["net_income"].apply(Financials.convert_to_billions) / num_shares
+    df["eps"] = df["net_income"].apply(Financials.to_billions) / num_shares
 
     return df
 
