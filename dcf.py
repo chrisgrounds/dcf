@@ -12,7 +12,7 @@ parser.add_argument('--ticker')
 args = parser.parse_args()
 ticker = args.ticker
 
-current_revenue = stock_info.get_income_statement(ticker).iloc[15]["2020-12-31"].values[0]
+current_revenue = stock_info.get_income_statement(ticker).loc["totalRevenue", "2020-12-31"].values[0]
 
 gross_margin_avg = 0.2
 operating_margin_avg = 0.1
