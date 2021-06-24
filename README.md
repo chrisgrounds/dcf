@@ -7,8 +7,9 @@
 This runs a Monte Carlo DCF simulation for the number of simulations specified and outputs it to `simulations/{ticker}/`.
 
 ```bash
-python3 dcf.py --simulations 100000 --ticker tsla
+python3 dcf.py --simulations 100000 --ticker tsla --growth 1.5
 ```
+
 ## Generate Histogram of Model
 
 This prints out the dataframe stored in `simulations/{ticker}/` and generates the histogram.
