@@ -9,17 +9,18 @@ parser = argparse.ArgumentParser(description='Command line args')
 parser.add_argument('--simulations', type=int)
 parser.add_argument('--ticker')
 parser.add_argument('--growth', type=float)
+parser.add_argument('--years', type=int)
 
 args = parser.parse_args()
 ticker = args.ticker
 growth_rate = args.growth
+num_years = args.years
 gross_margin_avg = 0.2
 operating_margin_avg = 0.1
 std_dev = 0.1
 tax_rate = 0.2
 discount_rate = 0.07
 pe_ratio = 30
-num_years = 10
 
 class Financials():
   @staticmethod
@@ -28,18 +29,19 @@ class Financials():
 
   @staticmethod
   def to_billions(v):
-    return v * 1000000000
+    return v * 1000000
 
   def from_billions(v):
-    return v / 1000000000
+    return v / 1000000
 
   @staticmethod
   def generate_future_revenue(rev, growth_rate):
-    revenue = [rev]
+    revenue = []
 
     i = 0
     while (i < num_years):
-      revenue.append(round(revenue[-1] * growth_rate, 2))
+      r = revenue[-1] if i != 0 else rev
+      revenue.append(round(r * growth_rate, 2))
       i += 1
 
     return np.array(revenue)

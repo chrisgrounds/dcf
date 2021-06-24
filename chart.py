@@ -15,4 +15,5 @@ print(results_df)
 
 graph = results_df.plot(kind='hist', bins=500, y=["Discounted Cash Flow"], title="Discounted Cash Flow - Monte Carlo Simulation")
 graph.set_xlabel("$ / share")
+plt.savefig("simulations/{}/{}.png".format(args.ticker, args.ticker))
 plt.show()
