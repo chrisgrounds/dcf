@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import numpy_financial as npf
@@ -126,7 +127,12 @@ def main():
     'Discounted Cash Flow'
   ])
 
-  results.to_csv("simulations/{}/{}.csv".format(ticker, ticker))
+  directory = "simulations/{}".format(ticker)
+
+  if not os.path.exists(directory):
+    os.makedirs(directory)
+
+  results.to_csv("{}/{}.csv".format(directory, ticker))
 
 if __name__ == "__main__":
   main()
