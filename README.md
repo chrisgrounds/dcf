@@ -12,7 +12,7 @@ python3 cli.py --simulations 100000 --ticker tsla --growth 1.5 --years 10
 
 ## Generate Histogram of Model
 
-This prints out the dataframe stored in `simulations/{ticker}/` and generates the histogram.
+This prints out the dataframe stored in `simulations/{ticker}/`, generates the histogram, and saves it to `simulations/{ticker}/`.
 
 ```bash
 python3 chart.py --ticker tsla
