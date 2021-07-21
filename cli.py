@@ -19,10 +19,10 @@ operating_margin_avg = 0.1
 std_dev = 0.1
 tax_rate = 0.2
 discount_rate = 0.07
-pe_ratio = 30
+peg = 1
 
 def main():
-  financials = generate(ticker, tax_rate, num_years, growth_rate, std_dev, gross_margin_avg, operating_margin_avg, args.simulations, pe_ratio, discount_rate)
+  financials = generate(ticker, tax_rate, num_years, growth_rate, std_dev, gross_margin_avg, operating_margin_avg, args.simulations, discount_rate, peg)
 
   print("\n\nFinished simulation")
 

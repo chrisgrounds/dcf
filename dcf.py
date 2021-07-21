@@ -1,11 +1,12 @@
 import numpy as np
 
 class DCF:
-  def __init__(self, revenue, tax_rate, num_years, growth_rate):
+  def __init__(self, revenue, tax_rate, num_years, growth_rate, discount_rate):
     self.revenue = revenue
     self.tax_rate = tax_rate
     self.num_years = num_years
     self.growth_rate = growth_rate
+    self.discount_rate = discount_rate
 
   def calculate_tax(self, v):
     return v * self.tax_rate if v > 0 else 0
