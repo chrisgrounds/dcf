@@ -15,6 +15,8 @@ class DCF:
     self.discount_rate = discount_rate
     self.perceptual_growth_rate = 1.04
     self.peg = peg
+    self.future_revenue = self.generate_future_revenue()
+    print("Generated revenue: ", self.future_revenue)
 
   def calculate(self):
     gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
@@ -22,7 +24,7 @@ class DCF:
     revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
 
     df = pd.DataFrame(index=range(self.num_years), data={
-      "revenue": self.revenue * revenue_modifier,
+      "revenue": self.future_revenue * revenue_modifier,
       "gross_margin": gross_margin,
       "operating_margin": operating_margin
     })

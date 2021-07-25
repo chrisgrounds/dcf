@@ -2,8 +2,7 @@ import numpy_financial as npf
 from normal_distribution import NormalDistribution
 
 class MonteCarlo:
-  def __init__(self, revenue, num_simulations, dcf):
-    self.revenue = revenue
+  def __init__(self, num_simulations, dcf):
     self.num_simulations = num_simulations
     self.dcf = dcf
 
