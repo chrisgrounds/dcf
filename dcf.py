@@ -1,14 +1,38 @@
 import numpy as np
+import pandas as pd
+from normal_distribution import NormalDistribution
 
 class DCF:
-  def __init__(self, revenue, tax_rate, num_years, growth_rate, discount_rate, peg):
+  def __init__(self, revenue, std_dev, tax_rate, num_years, gross_margin_avg, operating_margin_avg, num_shares, growth_rate, discount_rate, peg):
     self.revenue = revenue
+    self.std_dev = std_dev
     self.tax_rate = tax_rate
     self.num_years = num_years
+    self.gross_margin_avg = gross_margin_avg
+    self.operating_margin_avg = operating_margin_avg
+    self.num_shares = num_shares
     self.growth_rate = growth_rate
     self.discount_rate = discount_rate
     self.perceptual_growth_rate = 1.04
     self.peg = peg
+
+  def calculate(self):
+    gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
+    operating_margin = NormalDistribution.generate(self.operating_margin_avg, self.std_dev, self.num_years)
+    revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
+
+    df = pd.DataFrame(index=range(self.num_years), data={
+      "revenue": self.revenue * revenue_modifier,
+      "gross_margin": gross_margin,
+      "operating_margin": operating_margin
+    })
+
+    df["gross_profit"] = df["revenue"] * df["gross_margin"]
+    df["operating_profit"] = df["revenue"] * df["operating_margin"]
+    df["net_income"] = df["operating_profit"].apply(lambda x: self.calculate_tax(x))
+    df["eps"] = df["net_income"].apply(lambda x: self.to_billions(x)) / self.num_shares
+
+    return df
 
   def calculate_tax(self, v):
     return v * self.tax_rate if v > 0 else 0
@@ -33,7 +57,7 @@ class DCF:
     perceptual_pe = self.derive_PE_from_perpeptual_growth()
     growth_pe = self.derive_PE_from_earnings_growth(incomes)
 
-    return ((perceptual_pe * 4) + growth_pe) / 5
+    return (perceptual_pe + growth_pe) / 2
 
   def generate_future_revenue(self):
     revenue = []

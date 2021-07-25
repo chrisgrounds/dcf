@@ -1,40 +1,11 @@
-import pandas as pd
-import numpy as np
 import numpy_financial as npf
-
-class NormalDistribution:
-  @staticmethod
-  def generate(center, scale, size):
-    return np.random.normal(center, scale, size).round(2)
+from normal_distribution import NormalDistribution
 
 class MonteCarlo:
-  def __init__(self, std_dev, revenue, gross_margin_avg, operating_margin_avg, num_shares, num_simulations, num_years, dcf):
-    self.std_dev = std_dev
+  def __init__(self, revenue, num_simulations, dcf):
     self.revenue = revenue
-    self.gross_margin_avg = gross_margin_avg
-    self.operating_margin_avg = operating_margin_avg
-    self.num_shares = num_shares
     self.num_simulations = num_simulations
-    self.num_years = num_years
     self.dcf = dcf
-
-  def calculate(self):
-    gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
-    operating_margin = NormalDistribution.generate(self.operating_margin_avg, self.std_dev, self.num_years)
-    revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
-
-    df = pd.DataFrame(index=range(self.num_years), data={
-      "revenue": self.revenue * revenue_modifier,
-      "gross_margin": gross_margin,
-      "operating_margin": operating_margin
-    })
-
-    df["gross_profit"] = df["revenue"] * df["gross_margin"]
-    df["operating_profit"] = df["revenue"] * df["operating_margin"]
-    df["net_income"] = df["operating_profit"].apply(lambda x: self.dcf.calculate_tax(x))
-    df["eps"] = df["net_income"].apply(lambda x: self.dcf.to_billions(x)) / self.num_shares
-
-    return df
 
   def simulate(self):
     financials = []
@@ -43,7 +14,7 @@ class MonteCarlo:
       if i % 100 == 0:
         print(".", end="", flush=True)
 
-      df = self.calculate()
+      df = self.dcf.calculate()
 
       eps = df['eps']
 
