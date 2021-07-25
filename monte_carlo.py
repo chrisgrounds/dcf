@@ -8,7 +8,7 @@ class NormalDistribution:
     return np.random.normal(center, scale, size).round(2)
 
 class MonteCarlo:
-  def __init__(self, std_dev, revenue, gross_margin_avg, operating_margin_avg, num_shares, num_simulations, num_years, dcf, peg):
+  def __init__(self, std_dev, revenue, gross_margin_avg, operating_margin_avg, num_shares, num_simulations, num_years, dcf):
     self.std_dev = std_dev
     self.revenue = revenue
     self.gross_margin_avg = gross_margin_avg
@@ -17,7 +17,6 @@ class MonteCarlo:
     self.num_simulations = num_simulations
     self.num_years = num_years
     self.dcf = dcf
-    self.peg = peg
 
   def calculate(self):
     gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
@@ -37,20 +36,6 @@ class MonteCarlo:
 
     return df
 
-  def derive_pe(self, incomes):
-    i = 0
-    growth_pct = 0
-    while i < incomes.size - 1:
-      if incomes[i] > 0 and incomes[i + 1] > 0:
-        change = incomes[i + 1] - incomes[i]
-        growth_pct += change / incomes[i]
-      i += 1
-    
-    avg_growth_pct = growth_pct / incomes.size
-    new_pe = avg_growth_pct * self.peg * 100
-
-    return avg_growth_pct, new_pe
-
   def simulate(self):
     financials = []
 
@@ -62,7 +47,7 @@ class MonteCarlo:
 
       eps = df['eps']
 
-      avg_growth_pct, derived_pe = self.derive_pe(df["net_income"])
+      derived_pe = self.dcf.derive_pe(df["net_income"])
 
       pe_multiple = NormalDistribution.generate(derived_pe, 0.3, 1)[0]
 
