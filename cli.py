@@ -16,9 +16,9 @@ growth_rate = args.growth
 num_years = args.years
 gross_margin_avg = 0.2
 operating_margin_avg = 0.1
-std_dev = 0.1
+std_dev = 0.05
 tax_rate = 0.2
-discount_rate = 0.07
+discount_rate = 0.15
 peg = 1
 
 def main():
