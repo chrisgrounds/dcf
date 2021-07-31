@@ -18,10 +18,15 @@ class DCF:
     self.future_revenue = self.generate_future_revenue()
     print("Generated revenue: ", self.future_revenue)
 
-  def calculate(self):
-    gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
-    operating_margin = NormalDistribution.generate(self.operating_margin_avg, self.std_dev, self.num_years)
-    revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
+  def calculate(self, distribution=True):
+    if distribution:
+      gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
+      operating_margin = NormalDistribution.generate(self.operating_margin_avg, self.std_dev, self.num_years)
+      revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
+    else:
+      gross_margin = self.gross_margin_avg
+      operating_margin = self.operating_margin_avg
+      revenue_modifier = 1
 
     df = pd.DataFrame(index=range(self.num_years), data={
       "revenue": self.future_revenue * revenue_modifier,
