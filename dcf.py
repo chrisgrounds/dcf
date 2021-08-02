@@ -38,7 +38,7 @@ class DCF:
     df["gross_profit"] = df["revenue"] * df["gross_margin"]
     df["operating_profit"] = df["revenue"] * df["operating_margin"]
     df["net_income"] = df["operating_profit"].apply(lambda x: self.calculate_tax(x))
-    df["eps"] = df["net_income"].apply(lambda x: self.to_billions(x)) / self.num_shares
+    df["eps"] = df["net_income"] / self.num_shares
 
     return df
 
@@ -80,6 +80,3 @@ class DCF:
 
   def to_billions(self, v):
     return v * 1000000
-
-  def from_billions(self, v):
-    return v / 1000000

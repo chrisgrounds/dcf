@@ -18,7 +18,7 @@ def handler(event, context):
   perpetual_rate = float(queryStrings.get("perpetual_rate", 1.03))
 
   num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
-  current_revenue = stock_info.get_income_statement(ticker).loc["totalRevenue"][0] / 1000000 # refactor
+  current_revenue = stock_info.get_income_statement(ticker).loc["totalRevenue"][0]
   dcf = DCF(current_revenue, std_dev, tax_rate, num_years, 2, operating_margin, num_shares, growth_rate, discount_rate, peg, perpetual_rate)
 
   df = dcf.calculate(distribution=False)
