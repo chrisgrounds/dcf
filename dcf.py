@@ -16,13 +16,14 @@ class DCF:
     self.perceptual_growth_rate = 1.04
     self.peg = peg
     self.future_revenue = self.generate_future_revenue()
+    self.normal = NormalDistribution(std_dev)
     print("Generated revenue: ", self.future_revenue)
 
   def calculate(self, distribution=True):
     if distribution:
-      gross_margin = NormalDistribution.generate(self.gross_margin_avg, self.std_dev, self.num_years)
-      operating_margin = NormalDistribution.generate(self.operating_margin_avg, self.std_dev, self.num_years)
-      revenue_modifier = NormalDistribution.generate(1, self.std_dev, self.num_years)
+      gross_margin = self.normal.generate(self.gross_margin_avg, self.num_years)
+      operating_margin = self.normal.generate(self.operating_margin_avg, self.num_years)
+      revenue_modifier = self.normal.generate(1, self.num_years)
     else:
       gross_margin = self.gross_margin_avg
       operating_margin = self.operating_margin_avg

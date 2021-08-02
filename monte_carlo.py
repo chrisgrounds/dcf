@@ -19,7 +19,9 @@ class MonteCarlo:
 
       derived_pe = self.dcf.derive_pe(df["net_income"])
 
-      pe_multiple = NormalDistribution.generate(derived_pe, 0.3, 1)[0]
+      normal = NormalDistribution(0.3)
+
+      pe_multiple = normal.generate(derived_pe, 1)[0]
 
       financials.append([df['revenue'].mean().round(2),
                         df['gross_margin'].mean().round(2),
