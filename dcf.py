@@ -3,7 +3,7 @@ import pandas as pd
 from normal_distribution import NormalDistribution
 
 class DCF:
-  def __init__(self, revenue, std_dev, tax_rate, num_years, gross_margin_avg, operating_margin_avg, num_shares, growth_rate, discount_rate, peg):
+  def __init__(self, revenue, std_dev, tax_rate, num_years, gross_margin_avg, operating_margin_avg, num_shares, growth_rate, discount_rate, peg, perpetual_rate):
     self.revenue = revenue
     self.std_dev = std_dev
     self.tax_rate = tax_rate
@@ -13,13 +13,13 @@ class DCF:
     self.num_shares = num_shares
     self.growth_rate = growth_rate
     self.discount_rate = discount_rate
-    self.perceptual_growth_rate = 1.04
+    self.perceptual_growth_rate = perpetual_rate
     self.peg = peg
     self.future_revenue = self.generate_future_revenue()
     self.normal = NormalDistribution(std_dev)
     print("Generated revenue: ", self.future_revenue)
 
-  def calculate(self, distribution=True):
+  def calculate(self, distribution):
     if distribution:
       gross_margin = self.normal.generate(self.gross_margin_avg, self.num_years)
       operating_margin = self.normal.generate(self.operating_margin_avg, self.num_years)

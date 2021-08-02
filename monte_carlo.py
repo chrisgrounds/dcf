@@ -13,7 +13,7 @@ class MonteCarlo:
       if i % 100 == 0:
         print(".", end="", flush=True)
 
-      df = self.dcf.calculate()
+      df = self.dcf.calculate(distribution=True)
 
       eps = df['eps']
 

@@ -15,10 +15,11 @@ def handler(event, context):
   growth_rate = float(queryStrings.get("growth_rate", 1.5))
   operating_margin = float(queryStrings.get("operating_margin", 0.1))
   discount_rate = float(queryStrings.get("discount_rate", 0.15))
+  perpetual_rate = float(queryStrings.get("perpetual_rate", 1.03))
 
   num_shares = stock_info.get_quote_data(ticker)["sharesOutstanding"]
   current_revenue = stock_info.get_income_statement(ticker).loc["totalRevenue"][0] / 1000000 # refactor
-  dcf = DCF(current_revenue, std_dev, tax_rate, num_years, 2, operating_margin, num_shares, growth_rate, discount_rate, peg)
+  dcf = DCF(current_revenue, std_dev, tax_rate, num_years, 2, operating_margin, num_shares, growth_rate, discount_rate, peg, perpetual_rate)
 
   df = dcf.calculate(distribution=False)
 
